@@ -4,7 +4,20 @@ import router from './router'
 import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.css'
-import { Aside, Button, Container, Form, FormItem, Header, Input, Main, Message } from 'element-ui'
+import {
+  Aside,
+  Button,
+  Container,
+  Form,
+  FormItem,
+  Header,
+  Input,
+  Main,
+  Menu,
+  MenuItem, MenuItemGroup,
+  Message,
+  Submenu
+} from 'element-ui'
 
 Vue.use(Form)
 Vue.use(FormItem)
@@ -15,6 +28,10 @@ Vue.use(Header)
 Vue.use(Main)
 Vue.use(Aside)
 Vue.use(Container)
+Vue.use(Menu)
+Vue.use(MenuItem)
+Vue.use(Submenu)
+Vue.use(MenuItemGroup)
 
 Vue.config.productionTip = false
 
