@@ -54,12 +54,17 @@
         this.$refs[form].validate(async (valid, object) =>{
           if (!valid)
             return ;
+
+          console.log(valid)
           const { data: res } = await this.$axios.post('login', this.loginForm)
           if (res.meta.status !== 200) {
             this.$message.error(res.meta.msg)
           }
           else{
             this.$message.success(res.meta.msg)
+            console.log(res)
+            window.sessionStorage.setItem("token", res.data.token)
+            this.$router.push("/home")
           }
         });
       }
