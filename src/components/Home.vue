@@ -15,13 +15,16 @@
             class="el-menu-vertical-demo"
             background-color="#333744"
             text-color="#fff"
-            active-text-color="#ffd04b">
+            active-text-color="#409eff" unique-opened>
             <el-submenu :index="submenu.id+''" v-for="submenu in menulist" :key="submenu.id">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i :class="iconsObj[submenu.id]"></i>
                 <span>{{submenu.authName}}</span>
               </template>
-              <el-menu-item :index="item.id+''" v-for="item in submenu.children" :key="item.id">{{item.authName}}</el-menu-item>
+              <el-menu-item :index="item.id+''" v-for="item in submenu.children" :key="item.id">
+                <i class="el-icon-menu"></i>
+                <span>{{item.authName}}</span>
+              </el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -36,7 +39,14 @@ export default {
   name: 'Home',
   data () {
     return {
-      menulist: []
+      menulist: [],
+      iconsObj: {
+        125: 'el-icon-s-custom',
+        103: 'el-icon-s-tools',
+        101: 'el-icon-s-goods',
+        102: 'el-icon-s-order',
+        145: 'el-icon-s-marketing'
+      }
     }
   },
   methods: {
@@ -85,6 +95,9 @@ export default {
   .el-aside {
     height: 100%;
     background-color: #333744;
+    .el-menu {
+      border-right: none;
+    }
   }
 
   .el-main {
