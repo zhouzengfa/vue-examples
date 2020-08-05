@@ -7,12 +7,12 @@
         <img src="../assets/logo.png" alt="logo.png">
       </div>
       <!--表单区域-->
-      <el-form  label-width="0px" class="login_form">
+      <el-form  label-width="0px" class="login_form" :model="loginForm">
         <el-form-item>
-          <el-input ></el-input>
+          <el-input placeholder="请输入用户名" prefix-icon="el-icon-user-solid" v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input ></el-input>
+          <el-input type="password" prefix-icon="el-icon-lock" placeholder="请输入密码" v-model="loginForm.password"></el-input>
         </el-form-item>
         <el-form-item class="btns">
           <el-button type="primary">登陆</el-button>
@@ -25,7 +25,15 @@
 
 <script>
   export default {
-    name: 'Login'
+    name: 'Login',
+    data () {
+      return {
+        loginForm: {
+          username: '',
+          password: ''
+        }
+      }
+    }
   }
 </script>
 
