@@ -7,7 +7,7 @@
         <img src="../assets/logo.png" alt="logo.png">
       </div>
       <!--表单区域-->
-      <el-form  label-width="0px" class="login_form" :model="loginForm" :rules="verifyRules">
+      <el-form  label-width="0px" ref="formRef" class="login_form" :model="loginForm" :rules="verifyRules">
         <el-form-item prop="username">
           <el-input placeholder="请输入用户名" prefix-icon="el-icon-user-solid" v-model="loginForm.username"></el-input>
         </el-form-item>
@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item class="btns">
           <el-button type="primary">登陆</el-button>
-          <el-button type="info">重置</el-button>
+          <el-button type="info" @click="resetForm('formRef')">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -42,6 +42,12 @@
             {min: 6, max: 10, message: '长度在6到10个字符', trigger: 'blur'}
           ]
         }
+      }
+    },
+    methods: {
+      resetForm(from)
+      {
+        this.$refs[from].resetFields();
       }
     }
   }
