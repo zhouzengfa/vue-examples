@@ -1,7 +1,11 @@
 <template>
   <div class="home_container">
     <el-container>
-      <el-header>Header
+      <el-header>
+        <div>
+          <img src="../assets/haima.png" alt="haima.png">
+          <span>电商后台管理系统</span>
+        </div>
         <el-button type="info" @click="quit">退出</el-button>
       </el-header>
       <el-container>
@@ -33,6 +37,19 @@ export default {
   }
   .el-header{
     background-color: #373d41;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0px;
+    div{
+      display: flex;
+      font-size: 20px;
+      align-items: center;
+      color: #fff;
+      span{
+        margin-left: 10px;
+      }
+    }
   }
   .el-aside{
     height: 100%;
