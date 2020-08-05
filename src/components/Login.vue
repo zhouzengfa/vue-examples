@@ -15,7 +15,7 @@
           <el-input type="password" prefix-icon="el-icon-lock" placeholder="请输入密码" v-model="loginForm.password"></el-input>
         </el-form-item>
         <el-form-item class="btns">
-          <el-button type="primary">登陆</el-button>
+          <el-button type="primary" @click="submitForm('formRef')">登陆</el-button>
           <el-button type="info" @click="resetForm('formRef')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -48,6 +48,12 @@
       resetForm(from)
       {
         this.$refs[from].resetFields();
+      },
+      submitForm(form)
+      {
+        this.$refs[form].validate((valid, object) =>{
+          console.log(valid, object)
+        });
       }
     }
   }
