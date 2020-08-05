@@ -56,11 +56,10 @@
             return ;
           const { data: res } = await this.$axios.post('login', this.loginForm)
           if (res.meta.status !== 200) {
-            alert (res.meta.msg)
+            this.$message.error(res.meta.msg)
           }
           else{
-            console.log('登陆成功')
-            console.log(res)
+            this.$message.success(res.meta.msg)
           }
         });
       }
