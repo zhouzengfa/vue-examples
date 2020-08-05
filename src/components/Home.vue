@@ -16,13 +16,12 @@
             background-color="#333744"
             text-color="#fff"
             active-text-color="#ffd04b">
-            <el-submenu index="1">
+            <el-submenu :index="submenu.id+''" v-for="submenu in menulist" :key="submenu.id">
               <template slot="title">
                 <i class="el-icon-location"></i>
-                <span>导航一</span>
+                <span>{{submenu.authName}}</span>
               </template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
+              <el-menu-item :index="item.id+''" v-for="item in submenu.children" :key="item.id">{{item.authName}}</el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -35,11 +34,22 @@
 <script>
 export default {
   name: 'Home',
+  data () {
+    return {
+      menulist: []
+    }
+  },
   methods: {
     quit () {
       window.sessionStorage.clear()
       this.$router.push('/login')
     }
+  },
+  async created () {
+    const { data: res } = await this.$axios.get('menus')
+    console.log(res)
+    if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+    this.menulist = res.data
   }
 }
 </script>
