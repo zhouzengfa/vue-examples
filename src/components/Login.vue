@@ -7,11 +7,11 @@
         <img src="../assets/logo.png" alt="logo.png">
       </div>
       <!--表单区域-->
-      <el-form  label-width="0px" class="login_form" :model="loginForm">
-        <el-form-item>
+      <el-form  label-width="0px" class="login_form" :model="loginForm" :rules="verifyRules">
+        <el-form-item prop="username">
           <el-input placeholder="请输入用户名" prefix-icon="el-icon-user-solid" v-model="loginForm.username"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password" >
           <el-input type="password" prefix-icon="el-icon-lock" placeholder="请输入密码" v-model="loginForm.password"></el-input>
         </el-form-item>
         <el-form-item class="btns">
@@ -31,6 +31,16 @@
         loginForm: {
           username: '',
           password: ''
+        },
+        verifyRules: {
+          username: [
+            {required: true, message: '用户名不能为空', trigger: 'blur'},
+            {min: 3, max: 10, message: '长度在3到10个字符', trigger: 'blur'}
+          ],
+          password: [
+            {required: true, message: '密码不能为空', trigger: 'blur'},
+            {min: 6, max: 10, message: '长度在6到10个字符', trigger: 'blur'}
+          ]
         }
       }
     }
