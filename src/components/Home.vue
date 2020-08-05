@@ -9,13 +9,16 @@
         <el-button type="info" @click="quit">退出</el-button>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside :width="toggleMenu ? '64px' : '200px'">
+          <div class="toggle-button"  @click="toggleSideMenu">
+            <i :class="!toggleMenu ? 'el-icon-s-fold' : 'el-icon-s-unfold'"></i>
+          </div>
           <el-menu
             default-active="2"
             class="el-menu-vertical-demo"
             background-color="#333744"
             text-color="#fff"
-            active-text-color="#409eff" unique-opened>
+            active-text-color="#409eff" unique-opened :collapse-transition="false" :collapse="toggleMenu">
             <el-submenu :index="submenu.id+''" v-for="submenu in menulist" :key="submenu.id">
               <template slot="title">
                 <i :class="iconsObj[submenu.id]"></i>
@@ -46,13 +49,17 @@ export default {
         101: 'el-icon-s-goods',
         102: 'el-icon-s-order',
         145: 'el-icon-s-marketing'
-      }
+      },
+      toggleMenu: false
     }
   },
   methods: {
     quit () {
       window.sessionStorage.clear()
       this.$router.push('/login')
+    },
+    toggleSideMenu () {
+      this.toggleMenu = !this.toggleMenu
     }
   },
   async created () {
@@ -68,11 +75,9 @@ export default {
   .home_container {
     height: 100%;
   }
-
   .el-container {
     height: 100%;
   }
-
   .el-header {
     background-color: #373d41;
     display: flex;
@@ -90,6 +95,14 @@ export default {
         margin-left: 10px;
       }
     }
+  }
+  .toggle-button{
+    background-color: #4a5064;
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    line-height: 24px;
+    font-size: 15px;
   }
 
   .el-aside {
