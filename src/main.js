@@ -12,6 +12,8 @@ Vue.use(Input)
 Vue.use(Button)
 
 Vue.config.productionTip = false
+
+axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
 Vue.prototype.$axios = axios
 
 new Vue({

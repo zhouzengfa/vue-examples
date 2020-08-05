@@ -29,8 +29,8 @@
     data () {
       return {
         loginForm: {
-          username: '',
-          password: ''
+          username: 'admin',
+          password: '123456'
         },
         verifyRules: {
           username: [
@@ -51,8 +51,17 @@
       },
       submitForm(form)
       {
-        this.$refs[form].validate((valid, object) =>{
-          console.log(valid, object)
+        this.$refs[form].validate(async (valid, object) =>{
+          if (!valid)
+            return ;
+          const { data: res } = await this.$axios.post('login', this.loginForm)
+          if (res.meta.status !== 200) {
+            alert (res.meta.msg)
+          }
+          else{
+            console.log('登陆成功')
+            console.log(res)
+          }
         });
       }
     }
