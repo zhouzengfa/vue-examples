@@ -14,7 +14,7 @@
             <i :class="!toggleMenu ? 'el-icon-s-fold' : 'el-icon-s-unfold'"></i>
           </div>
           <el-menu
-            default-active="2"
+            :default-active="this.$route.path"
             class="el-menu-vertical-demo"
             background-color="#333744"
             text-color="#fff"
