@@ -22,7 +22,28 @@
 
 <script>
 export default {
-  name: 'Users'
+  name: 'Users',
+  data () {
+    return {
+      queryInfo: {
+        query: '',
+        pagenum: 1,
+        pagesize: 2
+      },
+      userlist: []
+    }
+  },
+  methods: {
+    async getUserList () {
+      const { data: res } = await this.$axios.get('users', { params: this.queryInfo })
+      console.log(res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.userlist = res.data.users
+    }
+  },
+  created () {
+    this.getUserList()
+  }
 }
 </script>
 
