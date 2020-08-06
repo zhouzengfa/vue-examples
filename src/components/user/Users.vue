@@ -8,8 +8,8 @@
     <el-card class="box-card">
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-input placeholder="请输入内容" >
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input @clear="getUserList" clearable placeholder="请输入姓名" v-model="queryInfo.query">
+            <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -29,7 +29,7 @@
           </template>
           <!--方法二-->
 <!--          <template slot-scope="scope">-->
-<!--          <el-switch v-model="scope.row.ms_state"></el-switch>-->
+<!--          <el-switch v-model="scope.row.mg_state"></el-switch>-->
 <!--          </template>-->
         </el-table-column>
         <el-table-column label="操作" width="180px">
