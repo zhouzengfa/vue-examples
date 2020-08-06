@@ -15,7 +15,7 @@ import {
   Main,
   Menu,
   MenuItem, MenuItemGroup,
-  Message, Row,
+  Message, Pagination, Row,
   Submenu, Switch, Table, TableColumn, Tooltip
 } from 'element-ui'
 
@@ -41,6 +41,7 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)
+Vue.use(Pagination)
 
 Vue.config.productionTip = false
 

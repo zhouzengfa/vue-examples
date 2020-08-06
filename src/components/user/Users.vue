@@ -42,6 +42,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pagenum"
+        :page-sizes="[1, 2, 5, 10]"
+        :page-size="queryInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totaluser">
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -54,7 +63,7 @@ export default {
       queryInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 6
+        pagesize: 1
       },
       userlist: [],
       totaluser: 0
@@ -67,6 +76,16 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.userlist = res.data.users
       this.totaluser = res.data.total
+    },
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+      this.queryInfo.pagesize = val
+      this.getUserList()
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
+      this.queryInfo.pagenum = val
+      this.getUserList()
     }
   },
   created () {
@@ -86,6 +105,9 @@ export default {
   .el-table{
     margin-top: 15px;
     font-size: 12px;
+  }
+  .el-pagination{
+    margin-top: 15px;
   }
 
 </style>
