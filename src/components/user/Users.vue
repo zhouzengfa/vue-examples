@@ -22,7 +22,16 @@
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="mobile" label="电话"></el-table-column>
         <el-table-column prop="role_name" label="角色"></el-table-column>
-        <el-table-column prop="ms_state" label="状态" ></el-table-column>
+        <el-table-column label="状态" >
+          <!--方法一-->
+          <template v-slot:="slot">
+            <el-switch value="slot.row.ms_state"></el-switch>
+          </template>
+          <!--方法二-->
+<!--          <template slot-scope="scope">-->
+<!--          <el-switch v-model="scope.row.ms_state"></el-switch>-->
+<!--          </template>-->
+        </el-table-column>
         <el-table-column label="操作" ></el-table-column>
       </el-table>
     </el-card>

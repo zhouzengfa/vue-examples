@@ -16,7 +16,7 @@ import {
   Menu,
   MenuItem, MenuItemGroup,
   Message, Row,
-  Submenu, Table, TableColumn
+  Submenu, Switch, Table, TableColumn
 } from 'element-ui'
 
 Vue.use(Form)
@@ -39,6 +39,7 @@ Vue.use(Col)
 Vue.use(Row)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Switch)
 
 Vue.config.productionTip = false
 
