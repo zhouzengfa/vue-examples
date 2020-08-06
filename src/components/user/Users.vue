@@ -78,13 +78,27 @@
 <script>
 export default {
   name: 'Users',
-  data () {
+  data: function () {
+    var checkMobile = (rule, value, callback) => {
+      const regEmail = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+      if (regEmail.test(value)) {
+        return callback()
+      }
+      return callback(new Error('请输入合法的手机号'))
+    }
+    var checkEmail = (rule, value, callback) => {
+      const regEmail = /^([a-zA-Z0-9-_])+@([a-zA-Z0-9-_])+(\.[a-zA-Z0-9-_])+/
+      if (regEmail.test(value)) {
+        return callback()
+      }
+      return callback(new Error('请输入合法的邮箱'))
+    }
     return {
       queryInfo: {
-               query: '',
-               pagenum: 1,
-               pagesize: 1
-               },
+        query: '',
+        pagenum: 1,
+        pagesize: 1
+      },
       userlist: [],
       totaluser: 0,
       addUserDialogVisiable: false,
@@ -95,51 +109,84 @@ export default {
         mobile: ''
       },
       addUserRules: {
-        username:[
-          { required: true, message: '请输入姓名', trigger: 'blur'},
-          { min: 3, max: 10, message: '长度在3-10个字符之间', trigger: 'blur'}
+        username: [
+          {
+            required: true,
+            message: '请输入姓名',
+            trigger: 'blur'
+          },
+          {
+            min: 3,
+            max: 10,
+            message: '长度在3-10个字符之间',
+            trigger: 'blur'
+          }
         ],
-        password:[
-          { required: true, message: '请输入姓名', trigger: 'blur'},
-          { min: 6, max: 15, message: '长度在6-15个字符之间', trigger: 'blur'}
+        password: [
+          {
+            required: true,
+            message: '请输入姓名',
+            trigger: 'blur'
+          },
+          {
+            min: 6,
+            max: 15,
+            message: '长度在6-15个字符之间',
+            trigger: 'blur'
+          }
         ],
-        email:[
-          { required: true, message: '请输入邮箱', trigger: 'blur'},
+        email: [
+          {
+            required: true,
+            message: '请输入邮箱',
+            trigger: 'blur'
+          },
+          {
+            validator: checkEmail,
+            trigger: 'blur'
+          }
         ],
-        mobile:[
-          { required: true, message: '请输入手机号', trigger: 'blur'},
-          { min: 11, max: 11, message: '长度在11个字符之间', trigger: 'blur'}
+        mobile: [
+          {
+            required: true,
+            message: '请输入手机号',
+            trigger: 'blur'
+          },
+          {
+            validator: checkMobile,
+            trigger: 'blur'
+          }
         ]
       }
     }
   },
   methods: {
-         async getUserList () {
-         const { data: res } = await this.$axios.get('users', { params: this.queryInfo })
-         console.log(res)
-         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-         this.userlist = res.data.users
-         this.totaluser = res.data.total
-         },
-         handleSizeChange (val) {
-         console.log(`每页 ${val} 条`)
-         this.queryInfo.pagesize = val
-         this.getUserList()
-         },
-         handleCurrentChange (val) {
-         console.log(`当前页: ${val}`)
-         this.queryInfo.pagenum = val
-         this.getUserList()
-         },
-         async onChangeUserState (userinfo) {
-         console.log('userinfo:', userinfo)
-         // userinfo.mg_state = !userinfo.mg_state
-         const { data: res } = await this.$axios.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
-         console.log(res)
-         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-         this.$message.success(res.meta.msg)
-         }
-         },
+    async getUserList () {
+      const { data: res } = await this.$axios.get('users', { params: this.queryInfo })
+      console.log(res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.userlist = res.data.users
+      this.totaluser = res.data.total
+    },
+    handleSizeChange: function (val) {
+      console.log(`每页 ${val} 条`)
+      this.queryInfo.pagesize = val
+      this.getUserList()
+    },
+    handleCurrentChange: function (val) {
+      console.log(`当前页: ${val}`)
+      this.queryInfo.pagenum = val
+      this.getUserList()
+    },
+    onChangeUserState: async function (userinfo) {
+      console.log('userinfo:', userinfo)
+      // userinfo.mg_state = !userinfo.mg_state
+      const { data: res } = await this.$axios.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
+      console.log(res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+    }
+  },
   created () {
     this.getUserList()
   }
