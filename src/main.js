@@ -5,8 +5,8 @@ import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.css'
 import {
-  Aside,
-  Button,
+  Aside, Breadcrumb, BreadcrumbItem,
+  Button, Card, Col,
   Container,
   Form,
   FormItem,
@@ -15,7 +15,7 @@ import {
   Main,
   Menu,
   MenuItem, MenuItemGroup,
-  Message,
+  Message, Row,
   Submenu
 } from 'element-ui'
 
@@ -32,6 +32,11 @@ Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(Submenu)
 Vue.use(MenuItemGroup)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
+Vue.use(Col)
+Vue.use(Row)
 
 Vue.config.productionTip = false
 
