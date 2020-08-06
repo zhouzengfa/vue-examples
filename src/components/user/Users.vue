@@ -16,6 +16,14 @@
           <el-button type="primary">添加用户</el-button>
         </el-col>
       </el-row>
+      <el-table :data="userlist" stripe border>
+        <el-table-column prop="username" label="姓名"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="mobile" label="电话"></el-table-column>
+        <el-table-column prop="role_name" label="角色"></el-table-column>
+        <el-table-column prop="ms_state" label="状态" ></el-table-column>
+        <el-table-column label="操作" ></el-table-column>
+      </el-table>
     </el-card>
   </div>
 </template>
@@ -28,9 +36,10 @@ export default {
       queryInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 2
+        pagesize: 6
       },
-      userlist: []
+      userlist: [],
+      totaluser: 0
     }
   },
   methods: {
@@ -39,6 +48,7 @@ export default {
       console.log(res)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.userlist = res.data.users
+      this.totaluser = res.data.total
     }
   },
   created () {
@@ -54,6 +64,10 @@ export default {
   }
   .box-card{
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+  }
+  .el-table{
+    margin-top: 15px;
+    font-size: 12px;
   }
 
 </style>

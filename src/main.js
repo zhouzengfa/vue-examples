@@ -16,7 +16,7 @@ import {
   Menu,
   MenuItem, MenuItemGroup,
   Message, Row,
-  Submenu
+  Submenu, Table, TableColumn
 } from 'element-ui'
 
 Vue.use(Form)
@@ -37,6 +37,8 @@ Vue.use(BreadcrumbItem)
 Vue.use(Card)
 Vue.use(Col)
 Vue.use(Row)
+Vue.use(Table)
+Vue.use(TableColumn)
 
 Vue.config.productionTip = false
 
