@@ -18,13 +18,15 @@
             class="el-menu-vertical-demo"
             background-color="#333744"
             text-color="#fff"
-            active-text-color="#409eff" unique-opened :collapse-transition="false" :collapse="toggleMenu">
+            active-text-color="#409eff" unique-opened
+            router
+            :collapse-transition="false" :collapse="toggleMenu">
             <el-submenu :index="submenu.id+''" v-for="submenu in menulist" :key="submenu.id">
               <template slot="title">
                 <i :class="iconsObj[submenu.id]"></i>
                 <span>{{submenu.authName}}</span>
               </template>
-              <el-menu-item :index="item.id+''" v-for="item in submenu.children" :key="item.id">
+              <el-menu-item :index="'/'+item.path" v-for="item in submenu.children" :key="item.id">
                 <i class="el-icon-menu"></i>
                 <span>{{item.authName}}</span>
               </el-menu-item>
