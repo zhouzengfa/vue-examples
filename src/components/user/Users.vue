@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -25,7 +25,7 @@
         <el-table-column label="状态" >
           <!--方法一-->
           <template v-slot:="slot">
-            <el-switch value="slot.row.ms_state"></el-switch>
+            <el-switch v-model="slot.row.mg_state" @change="onChangeUserState(slot.row)"></el-switch>
           </template>
           <!--方法二-->
 <!--          <template slot-scope="scope">-->
@@ -86,6 +86,14 @@ export default {
       console.log(`当前页: ${val}`)
       this.queryInfo.pagenum = val
       this.getUserList()
+    },
+    async onChangeUserState (userinfo) {
+      console.log('userinfo:', userinfo)
+      // userinfo.mg_state = !userinfo.mg_state
+      const { data: res } = await this.$axios.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
+      console.log(res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
     }
   },
   created () {
