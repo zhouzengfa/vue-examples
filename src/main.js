@@ -7,7 +7,7 @@ import './assets/css/global.css'
 import {
   Aside, Breadcrumb, BreadcrumbItem,
   Button, Card, Col,
-  Container,
+  Container, Dialog,
   Form,
   FormItem,
   Header,
@@ -42,6 +42,7 @@ Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
+Vue.use(Dialog)
 
 Vue.config.productionTip = false
 
