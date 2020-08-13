@@ -52,7 +52,7 @@
         :total="totaluser">
       </el-pagination>
     </el-card>
-    <el-dialog title="添加用户" :visible.sync="addUserDialogVisiable" width="50%">
+    <el-dialog title="添加用户" :visible.sync="addUserDialogVisiable" width="50%" @close="onCloseAddUserDialog">
       <el-form :model="addUserForm" :rules="addUserRules" ref="addUserFormRef" label-width="70px">
         <el-form-item label="姓名" prop="username">
           <el-input v-model="addUserForm.username"></el-input>
@@ -185,6 +185,9 @@ export default {
       console.log(res)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.$message.success(res.meta.msg)
+    },
+    onCloseAddUserDialog () {
+      this.$refs.addUserFormRef.resetFields()
     }
   },
   created () {
