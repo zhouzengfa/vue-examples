@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template>
-            <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="editUserDialogVisiable=true"></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             <el-tooltip effect="dark" content="修改" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
@@ -72,6 +72,23 @@
         <el-button type="primary" @click="addUser('addUserFormRef')">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="修改用户" :visible.sync="editUserDialogVisiable" width="50%" @close="onCloseEditUserDialog">
+      <el-form :model="editUserForm" :rules="editUserRules" ref="editUserFormRef" label-width="70px">
+        <el-form-item label="姓名">
+          <el-input v-model="editUserForm.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editUserForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="editUserForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editUserDialogVisiable= false">取 消</el-button>
+        <el-button type="primary" @click="modifyUser('editUserFormRef')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -102,6 +119,7 @@ export default {
       userlist: [],
       totaluser: 0,
       addUserDialogVisiable: false,
+      editUserDialogVisiable: false,
       addUserForm: {
         username: '',
         password: '',
@@ -135,6 +153,35 @@ export default {
             trigger: 'blur'
           }
         ],
+        email: [
+          {
+            required: true,
+            message: '请输入邮箱',
+            trigger: 'blur'
+          },
+          {
+            validator: checkEmail,
+            trigger: 'blur'
+          }
+        ],
+        mobile: [
+          {
+            required: true,
+            message: '请输入手机号',
+            trigger: 'blur'
+          },
+          {
+            validator: checkMobile,
+            trigger: 'blur'
+          }
+        ]
+      },
+      editUserForm: {
+        username: '',
+        email: '',
+        mobile: ''
+      },
+      editUserRules: {
         email: [
           {
             required: true,
@@ -202,6 +249,24 @@ export default {
         this.addUserDialogVisiable = false
         this.getUserList()
       })
+    },
+    onCloseEditUserDialog () {
+      this.$refs.editUserFormRef.resetFields()
+      console.log('click close edit user dialog')
+    },
+    async modifyUser (form) {
+      // this.$refs[form].validate(async valid => {
+      //   if (!valid) return
+      //   const { data: res } = await this.$axios.post('users', this.addUserForm)
+      //   console.log(res)
+      //   if (res.meta.status !== 201) {
+      //     this.$message.error(res.meta.msg)
+      //     return
+      //   }
+      //   this.$message.success(res.meta.msg)
+      //   this.addUserDialogVisiable = false
+      //   this.getUserList()
+      // })
     }
   },
   created () {
