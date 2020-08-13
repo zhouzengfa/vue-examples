@@ -35,7 +35,7 @@
         <el-table-column label="操作" width="180px">
           <template v-slot:="slot">
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditUserDialog(slot.row.id)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(slot.row.id)"></el-button>
             <el-tooltip effect="dark" content="修改" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
             </el-tooltip>
@@ -277,6 +277,30 @@ export default {
         this.$message.success(res.meta.msg)
         this.editUserDialogVisiable = false
         this.getUserList()
+      })
+    },
+    async deleteUser (id) {
+      console.log('delete id:", id')
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then((op) => {
+        this.$axios.delete('users/' + id)
+          .then(data => {
+            console.log(data)
+            if (data.data.meta.status !== 200) return this.$message.error(data.data.meta.msg)
+            this.$message({
+              type: 'success',
+              message: data.data.meta.msg
+            })
+            this.getUserList()
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消删除'
+        })
       })
     }
   },

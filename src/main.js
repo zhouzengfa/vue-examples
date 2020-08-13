@@ -16,7 +16,7 @@ import {
   Menu,
   MenuItem, MenuItemGroup,
   Message, Pagination, Row,
-  Submenu, Switch, Table, TableColumn, Tooltip
+  Submenu, Switch, Table, TableColumn, Tooltip, MessageBox
 } from 'element-ui'
 
 Vue.use(Form)
@@ -56,6 +56,7 @@ axios.interceptors.request.use(config => {
 
 Vue.prototype.$axios = axios
 Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm
 
 new Vue({
   router,
