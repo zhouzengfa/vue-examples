@@ -33,8 +33,8 @@
           <!--          </template>-->
         </el-table-column>
         <el-table-column label="操作" width="180px">
-          <template>
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="editUserDialogVisiable=true"></el-button>
+          <template v-slot:="slot">
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditUserDialog(slot.row.id)"></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             <el-tooltip effect="dark" content="修改" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
@@ -253,6 +253,14 @@ export default {
     onCloseEditUserDialog () {
       this.$refs.editUserFormRef.resetFields()
       console.log('click close edit user dialog')
+    },
+    async showEditUserDialog (id) {
+      console.log('user id:', id)
+      const { data: res } = await this.$axios.get('users/' + id)
+      console.log(res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.editUserForm = res.data
+      this.editUserDialogVisiable = true
     },
     async modifyUser (form) {
       // this.$refs[form].validate(async valid => {
