@@ -263,18 +263,21 @@ export default {
       this.editUserDialogVisiable = true
     },
     async modifyUser (form) {
-      // this.$refs[form].validate(async valid => {
-      //   if (!valid) return
-      //   const { data: res } = await this.$axios.post('users', this.addUserForm)
-      //   console.log(res)
-      //   if (res.meta.status !== 201) {
-      //     this.$message.error(res.meta.msg)
-      //     return
-      //   }
-      //   this.$message.success(res.meta.msg)
-      //   this.addUserDialogVisiable = false
-      //   this.getUserList()
-      // })
+      this.$refs[form].validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$axios.put('users/' + this.editUserForm.id, {
+          email: this.editUserForm.email,
+          mobile: this.editUserForm.mobile
+        })
+        console.log(res)
+        if (res.meta.status !== 200) {
+          this.$message.error(res.meta.msg)
+          return
+        }
+        this.$message.success(res.meta.msg)
+        this.editUserDialogVisiable = false
+        this.getUserList()
+      })
     }
   },
   created () {
