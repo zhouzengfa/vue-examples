@@ -190,9 +190,17 @@ export default {
       this.$refs.addUserFormRef.resetFields()
     },
     async addUser (form) {
-      this.addUserDialogVisiable = false
-      this.$refs[form].validate(valid => {
-        if (!valid) console.log(valid)
+      this.$refs[form].validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$axios.post('users', this.addUserForm)
+        console.log(res)
+        if (res.meta.status !== 201) {
+          this.$message.error(res.meta.msg)
+          return
+        }
+        this.$message.success(res.meta.msg)
+        this.addUserDialogVisiable = false
+        this.getUserList()
       })
     }
   },
