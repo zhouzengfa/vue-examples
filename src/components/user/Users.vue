@@ -69,7 +69,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialogVisiable= false">取 消</el-button>
-        <el-button type="primary" @click="addUserDialogVisiable= false">确 定</el-button>
+        <el-button type="primary" @click="addUser('addUserFormRef')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -188,6 +188,12 @@ export default {
     },
     onCloseAddUserDialog () {
       this.$refs.addUserFormRef.resetFields()
+    },
+    async addUser (form) {
+      this.addUserDialogVisiable = false
+      this.$refs[form].validate(valid => {
+        if (!valid) console.log(valid)
+      })
     }
   },
   created () {
