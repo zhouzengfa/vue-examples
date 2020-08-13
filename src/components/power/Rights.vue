@@ -6,7 +6,7 @@
       <el-breadcrumb-item>权限列表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card class="box-card">
-      <el-table :data="rightsList" stripe border>
+      <el-table :data="rolesList" stripe border>
         <el-table-column label="#" type="index"> </el-table-column>
         <el-table-column label="权限名称" prop="authName"> </el-table-column>
         <el-table-column label="路径" prop="path"> </el-table-column>
@@ -27,7 +27,7 @@ export default {
   name: 'Rights',
   data () {
     return {
-      rightsList: []
+      rolesList: []
     }
   },
   methods: {
@@ -37,7 +37,7 @@ export default {
     const { data: res } = await this.$axios.get('rights/list')
     console.log('rights:', res)
     if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-    this.rightsList = res.data
+    this.rolesList = res.data
   }
 
 }
