@@ -10,7 +10,24 @@
       <el-table :data="rolesList" stripe border>
         <el-table-column  type="expand">
           <template v-slot:="scope">
-            <pre>{{scope.row}}</pre>
+            <el-row :class="['bd-bottom','vccenter', i1 === 0 ? 'bd-top' : '']" v-for="(item1, i1) in scope.row.children" :key="item1.id">
+              <el-col :span="5">
+                <el-tag closable>{{item1.authName}}</el-tag>
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <el-col :span="19">
+                <el-row :class="['vccenter','bd-sub-bottom']" v-for="(item2) in item1.children" :key="item2.id">
+                  <el-col :span="5">
+                    <el-tag type="success" closable>{{item2.authName}}</el-tag>
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <el-col :span="19" >
+                    <el-tag v-for="item3 in item2.children" :key="item3.id" type="warning" closable>{{item3.authName}}</el-tag>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+<!--            <pre>{{scope.row}}</pre>-->
           </template>
         </el-table-column>
         <el-table-column label="#" type="index"> </el-table-column>
@@ -52,12 +69,30 @@ export default {
     font-size: 12px;
     margin-bottom: 15px;
   }
-
   .box-card {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
   }
   .el-table {
     margin-top: 15px;
     font-size: 12px;
+    .bd-top {
+      border-top: 1px solid #eee;
+    }
+    .bd-bottom {
+      border-bottom: 1px solid #eee;
+    }
+    .bd-sub-bottom {
+      border-bottom: 1px solid #eee;
+    }
+    .bd-sub-bottom:last-child {
+      border-bottom: none;
+    }
+    .el-tag {
+         margin: 7px 7px;
+       }
+    .vccenter {
+      display: flex;
+      align-items: center;
+    }
   }
 </style>
