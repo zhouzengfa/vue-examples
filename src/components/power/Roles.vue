@@ -12,17 +12,17 @@
           <template v-slot:="scope">
             <el-row :class="['bd-bottom','vccenter', i1 === 0 ? 'bd-top' : '']" v-for="(item1, i1) in scope.row.children" :key="item1.id">
               <el-col :span="5">
-                <el-tag closable>{{item1.authName}}</el-tag>
+                <el-tag closable @close="deleteRight(scope.row, item1.id)">{{item1.authName}}</el-tag>
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <el-col :span="19">
                 <el-row :class="['vccenter','bd-sub-bottom']" v-for="(item2) in item1.children" :key="item2.id">
                   <el-col :span="5">
-                    <el-tag type="success" closable>{{item2.authName}}</el-tag>
+                    <el-tag type="success" closable @close="deleteRight(scope.row, item2.id)">{{item2.authName}}</el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <el-col :span="19" >
-                    <el-tag v-for="item3 in item2.children" :key="item3.id" type="warning" closable>{{item3.authName}}</el-tag>
+                    <el-tag v-for="item3 in item2.children" :key="item3.id" type="warning" closable @close="deleteRight(scope.row, item3.id)">{{item3.authName}}</el-tag>
                   </el-col>
                 </el-row>
               </el-col>
@@ -59,6 +59,28 @@ export default {
       const { data: res } = await this.$axios.get('roles')
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.rolesList = res.data
+    },
+    deleteRight (role, rightId) {
+      console.log('click delete right')
+      this.$confirm('确定要删除此权限吗?', '删除权限', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then((op) => {
+        this.$axios.delete(`roles/${role.id}/rights/${rightId}`)
+          .then(res => {
+            res = res.data
+            console.log('删除用户权限返回：', res)
+            if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+            role.children = res.data
+          })
+          .catch(err => err)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消删除'
+        })
+      })
     }
   }
 }
