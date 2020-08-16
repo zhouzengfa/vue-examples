@@ -43,7 +43,7 @@
       </el-table>
     </el-card>
     <el-dialog title="分配权限" :visible.sync="rightsDialogVisiable" width="50%" @close="onCloseRightDialog">
-      <el-tree :data="rightsList" :props="treeProps" show-checkbox :default-expand-all="true"
+      <el-tree :data="rightsList" :props="treeProps" ref="treeRef" show-checkbox :default-expand-all="true"
                :default-checked-keys="treeCheckedKeys" node-key="id"></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="rightsDialogVisiable= false">取 消</el-button>
@@ -65,7 +65,8 @@ export default {
         children: 'children',
         label: 'authName'
       },
-      treeCheckedKeys: []
+      treeCheckedKeys: [],
+      roleid: ''
     }
   },
   async created () {
@@ -80,6 +81,7 @@ export default {
       this.rightsList = res.data
       this.fillCheckedKeys(role)
       this.rightsDialogVisiable = true
+      this.roleId = role.id
       console.log(this.treeCheckedKeys)
     },
     fillCheckedKeys (rights) {
@@ -91,8 +93,20 @@ export default {
         })
       }
     },
-    assignRights () {
-      console.log('分配权限')
+    assignRights: function () {
+      var keys = [
+        ...this.$refs.treeRef.getHalfCheckedKeys(),
+        ...this.$refs.treeRef.getCheckedKeys()
+      ]
+      var keyStr = keys.join(',')
+      this.$axios.post(`roles/${this.roleId}/rights`, { rids: keyStr })
+        .then(op => {
+          console.log('分配 权限：', op)
+          if (op.data.meta.status !== 200) return this.$message.error(op.data.meta.msg)
+          this.getRolesList()
+          this.$message.success(op.data.meta.msg)
+        }).catch(err => err)
+
       this.rightsDialogVisiable = false
     },
     onCloseRightDialog () {
