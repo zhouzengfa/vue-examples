@@ -36,10 +36,20 @@
         <el-table-column label="操作" width="300px">
           <el-button type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
-          <el-button type="warning" size="mini" icon="el-icon-setting">分配权限</el-button>
+          <template v-slot:="scope">
+            <el-button type="warning" size="mini" icon="el-icon-setting" @click="showRightsDialog(scope.row)">分配权限</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
+    <el-dialog title="分配权限" :visible.sync="rightsDialogVisiable" width="50%" @close="onCloseRightDialog">
+      <el-tree :data="rightsList" :props="treeProps" show-checkbox :default-expand-all="true"
+               :default-checked-keys="treeCheckedKeys" node-key="id"></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="rightsDialogVisiable= false">取 消</el-button>
+        <el-button type="primary" @click="assignRights">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -48,13 +58,46 @@ export default {
   name: 'Roles',
   data () {
     return {
-      rolesList: []
+      rolesList: [],
+      rightsDialogVisiable: false,
+      rightsList: [],
+      treeProps: {
+        children: 'children',
+        label: 'authName'
+      },
+      treeCheckedKeys: []
     }
   },
   async created () {
     this.getRolesList()
   },
   methods: {
+    async showRightsDialog (role) {
+      const { data: res } = await this.$axios.get('rights/tree')
+      console.log('all rights:', res)
+      console.log('row:', role)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.rightsList = res.data
+      this.fillCheckedKeys(role)
+      this.rightsDialogVisiable = true
+      console.log(this.treeCheckedKeys)
+    },
+    fillCheckedKeys (rights) {
+      if (rights.children == null) {
+        this.treeCheckedKeys.push(rights.id)
+      } else {
+        rights.children.forEach((item) => {
+          this.fillCheckedKeys(item)
+        })
+      }
+    },
+    assignRights () {
+      console.log('分配权限')
+      this.rightsDialogVisiable = false
+    },
+    onCloseRightDialog () {
+      this.treeCheckedKeys = []
+    },
     async getRolesList () {
       const { data: res } = await this.$axios.get('roles')
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
