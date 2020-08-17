@@ -19,7 +19,30 @@ export default {
   components: {
     BaseCard
   },
-  name: 'Cat'
+  name: 'Cat',
+  data () {
+    return {
+      queryInfo: {
+        pagesize: 5,
+        pagenum: 1,
+        type: 3
+      },
+      cateList: [],
+      totalpage: 0
+    }
+  },
+  created () {
+    this.getCateList()
+  },
+  methods: {
+    async getCateList () {
+      const { data: res } = await this.$axios.get('categories', { params: this.queryInfo })
+      console.log('categories:', res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.cateList = res.data.result
+      this.totalpage = res.data.total
+    }
+  }
 }
 </script>
 
