@@ -37,7 +37,7 @@
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditUserDialog(slot.row.id)"></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(slot.row.id)"></el-button>
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="showRoleDialog(slot.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -87,6 +87,24 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="editUserDialogVisiable= false">取 消</el-button>
         <el-button type="primary" @click="modifyUser('editUserFormRef')">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="分配角色" :visible.sync="roleDialogVisiable" width="50%" @close="onCloseRoleDialog">
+      <p>当前用户：{{allocRole.username}}</p>
+      <p>当前角色：{{allocRole.role_name}}</p>
+      <p>分配新角色：
+        <el-select v-model="selectedRoleValue" placeholder="请选择">
+          <el-option
+            v-for="item in userinfo"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="roleDialogVisiable= false">取 消</el-button>
+        <el-button type="primary" @click="assignRole">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -204,7 +222,11 @@ export default {
             trigger: 'blur'
           }
         ]
-      }
+      },
+      roleDialogVisiable: false,
+      allocRole: '',
+      userinfo: [],
+      selectedRoleValue: ''
     }
   },
   methods: {
@@ -302,6 +324,27 @@ export default {
           message: '取消删除'
         })
       })
+    },
+    onCloseRoleDialog () {
+      console.log('关闭角色分配对话框')
+      this.roleDialogVisiable = false
+      this.allocRole = ''
+      this.userinfo = []
+    },
+    async showRoleDialog (role) {
+      const { data: res } = await this.$axios.get('roles')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.userinfo = res.data
+      this.roleDialogVisiable = true
+      this.allocRole = role
+    },
+    async assignRole () {
+      const { data: res } = await this.$axios.put(`users/${this.allocRole.id}/role`, { rid: this.selectedRoleValue })
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.getUserList()
+      this.roleDialogVisiable = false
+      console.log('分配角色操作')
     }
   },
   created () {
