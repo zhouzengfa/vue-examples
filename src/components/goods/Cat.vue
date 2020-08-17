@@ -27,6 +27,15 @@
               <el-button type="danger" icon="el-icon-delete" size="mini" @click="showDeleteDialog()">删除</el-button>
             </template>
           </zk-table>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="queryInfo.pagenum"
+            :page-sizes="[1, 2, 5, 10]"
+            :page-size="queryInfo.pagesize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalpage">
+          </el-pagination>
         </template>
       </BaseCard>
     </div>
@@ -91,6 +100,16 @@ export default {
     },
     showDeleteDialog () {
       console.log('show delete dialog')
+    },
+    handleSizeChange (pagesize) {
+      console.log('page size change:', pagesize)
+      this.queryInfo.pagesize = pagesize
+      this.getCateList()
+    },
+    handleCurrentChange (pagenum) {
+      console.log('handle current change. page num:', pagenum)
+      this.queryInfo.pagenum = pagenum
+      this.getCateList()
     }
   }
 }
@@ -100,5 +119,11 @@ export default {
   .el-table {
     margin-top: 15px;
     font-size: 12px;
+  }
+  .zk-table {
+    margin-top: 15px;
+  }
+  .el-pagination {
+    margin-top: 15px;
   }
 </style>
