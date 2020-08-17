@@ -16,7 +16,7 @@ import {
   Menu,
   MenuItem, MenuItemGroup,
   Message, Pagination, Row,
-  Submenu, Switch, Table, TableColumn, Tooltip, MessageBox, Tag, Tree, Select, Option
+  Submenu, Switch, Table, TableColumn, Tooltip, MessageBox, Tag, Tree, Select, Option, Cascader
 } from 'element-ui'
 
 Vue.use(Form)
@@ -47,6 +47,7 @@ Vue.use(Tag)
 Vue.use(Tree)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Cascader)
 
 Vue.config.productionTip = false
 

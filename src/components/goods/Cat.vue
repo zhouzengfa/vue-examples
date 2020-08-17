@@ -6,7 +6,7 @@
           <el-breadcrumb-item>商品分类</el-breadcrumb-item>
         </template>
         <template v-slot:card>
-          <el-button type="primary">添加分类</el-button>
+          <el-button type="primary" @click="showCatKindDialog">添加分类</el-button>
           <zk-table
             border
             :selection-type="false"
@@ -38,6 +38,26 @@
           </el-pagination>
         </template>
       </BaseCard>
+      <el-dialog title="添加分类" :visible.sync="catKindDialogVisiable" width="50%" @close="onCloseCatKindDialog">
+        <el-form :model="addCatKindForm" :rules="addCatKindRules" ref="addCatKindFormRef" label-width="100px">
+          <el-form-item label="分类名称：" prop="cat_name">
+            <el-input v-model="addCatKindForm.cat_name"></el-input>
+          </el-form-item>
+          <el-form-item label="父级分类：" >
+            <el-cascader
+              v-model="selectedKeys"
+              :options="parentCatList"
+              :props="cascaderProps"
+              clearable
+              @change="handleChange">
+            </el-cascader>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="catKindDialogVisiable= false">取 消</el-button>
+        <el-button type="primary" @click="addCatKind">确 定</el-button>
+      </span>
+      </el-dialog>
     </div>
 </template>
 
@@ -81,13 +101,47 @@ export default {
           template: 'operator',
           width: 180
         }
-      ]
+      ],
+      catKindDialogVisiable: false,
+      addCatKindForm: {
+        cat_name: '',
+        cat_pid: 0,
+        cat_level: 0
+      },
+      addCatKindRules: {
+        cat_name: [{ required: true, message: '请添加分类名', trigger: 'blur' }]
+      },
+      cascaderProps: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children',
+        expandTrigger: 'hover'
+      },
+      parentCatList: [],
+      selectedKeys: []
     }
   },
   created () {
     this.getCateList()
   },
   methods: {
+    async showCatKindDialog () {
+      const { data: res } = await this.$axios.get('categories', { params: { type: 2 } })
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      console.log('show cat dialog', res)
+      this.parentCatList = res.data
+      this.catKindDialogVisiable = true
+    },
+    addCatKind () {
+    },
+    onCloseCatKindDialog () {
+      console.log('colse cat kind dialog')
+      // this.parentCatList = []
+      this.selectedKeys = []
+    },
+    handleChange (value) {
+      console.log('select:', value)
+    },
     async getCateList () {
       const { data: res } = await this.$axios.get('categories', { params: this.queryInfo })
       console.log('categories:', res)
@@ -125,5 +179,8 @@ export default {
   }
   .el-pagination {
     margin-top: 15px;
+  }
+  .el-cascader {
+    width: 100%;
   }
 </style>
