@@ -115,7 +115,8 @@ export default {
         value: 'cat_id',
         label: 'cat_name',
         children: 'children',
-        expandTrigger: 'hover'
+        expandTrigger: 'hover',
+        checkStrictly: true
       },
       parentCatList: [],
       selectedKeys: []
@@ -133,14 +134,31 @@ export default {
       this.catKindDialogVisiable = true
     },
     addCatKind () {
+      this.$refs.addCatKindFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$axios.post('categories', this.addCatKindForm)
+        if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        this.getCateList()
+        this.catKindDialogVisiable = false
+      })
     },
     onCloseCatKindDialog () {
       console.log('colse cat kind dialog')
-      // this.parentCatList = []
       this.selectedKeys = []
+      this.addCatKindForm.cat_pid = 0
+      this.addCatKindForm.cat_level = 0
+      this.addCatKindForm.cat_name = ''
     },
     handleChange (value) {
-      console.log('select:', value)
+      if (this.selectedKeys.length > 0) {
+        this.addCatKindForm.cat_pid = this.selectedKeys[this.selectedKeys.length - 1]
+        this.addCatKindForm.cat_level = this.selectedKeys.length
+      } else {
+        this.addCatKindForm.cat_level = 0
+        this.addCatKindForm.cat_level = 0
+      }
+      console.log(value)
     },
     async getCateList () {
       const { data: res } = await this.$axios.get('categories', { params: this.queryInfo })
