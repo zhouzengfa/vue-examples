@@ -43,7 +43,7 @@
             </el-table>
           </el-tab-pane>
         </el-tabs>
-        <edit-param-dialog :prop="propInfo" :is-visiable="editDialogVisiable" @close="onCloseEditDialog()"></edit-param-dialog>
+        <edit-param-dialog :prop="propInfo" :is-visiable="editDialogVisiable" @confirm="onEditConfirm" @close="onCloseEditDialog()"></edit-param-dialog>
       </template>
     </BaseCard>
 </template>
@@ -113,6 +113,17 @@ export default {
       this.editDialogVisiable = true
       console.log('show edit dialog')
     },
+    async onEditConfirm (param) {
+      console.log('param:', param)
+      if (this.selectedKeys.length !== 3) return
+      var id = this.selectedKeys[this.selectedKeys.length - 1]
+      const { data: res } = await this.$axios.post(`categories/${id}/attributes`,
+        { attr_name: param.content, attr_sel: this.activeName })
+      if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.getParamData()
+      console.log('get param data:', res)
+    },
     onCloseEditDialog () {
       console.log('close many dialog')
       this.editDialogVisiable = false
@@ -126,7 +137,9 @@ export default {
       return true
     },
     propInfo () {
-      return { title: this.dialogTitle }
+      return {
+        title: this.dialogTitle
+      }
     }
   }
 }

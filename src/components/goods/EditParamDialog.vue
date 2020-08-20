@@ -8,7 +8,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="isShow = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="onConfirm">确 定</el-button>
       </span>
   </el-dialog>
   </div>
@@ -44,6 +44,13 @@ export default {
     onCloseDialog () {
       console.log('close dialog')
       this.$emit('close')
+    },
+    onConfirm () {
+      this.$refs.formRef.validate(valid => {
+        if (!valid) return
+        this.$emit('confirm', this.data)
+        this.isShow = false
+      })
     }
   },
   watch: {
