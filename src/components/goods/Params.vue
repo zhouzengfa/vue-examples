@@ -25,8 +25,10 @@
               <el-table-column label="#" type="index"> </el-table-column>
               <el-table-column label="参数名称" prop="attr_name"> </el-table-column>
               <el-table-column label="操作" width="180px">
-                <el-button type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
-                <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+                <template v-slot:="scope">
+                  <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleModify(scope.row)">编辑</el-button>
+                  <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
           </el-tab-pane>
@@ -44,6 +46,7 @@
           </el-tab-pane>
         </el-tabs>
         <edit-param-dialog :prop="propInfo" :is-visiable="editDialogVisiable" @confirm="onEditConfirm" @close="onCloseEditDialog()"></edit-param-dialog>
+        <edit-param-dialog :prop="propInfo" :is-visiable="modifyDialogVisiable" @confirm="onModifyConfirm" @close="onCloseModifyDialog()"></edit-param-dialog>
       </template>
     </BaseCard>
 </template>
@@ -72,7 +75,9 @@ export default {
       manyParamData: [],
       onlyParamData: [],
       editDialogVisiable: false,
-      dialogTitle: ''
+      modifyDialogVisiable: false,
+      dialogTitle: '',
+      curRow: null
     }
   },
   created () {
@@ -104,6 +109,18 @@ export default {
         this.onlyParamData = res.data
       }
     },
+    handleModify (row) {
+      console.log('row:', row)
+      this.curRow = row
+      if (this.activeName === 'many') {
+        this.dialogTitle = '动态参数'
+      } else {
+        this.dialogTitle = '静态参数'
+      }
+      console.log('handleModify 1')
+      this.modifyDialogVisiable = true
+      console.log('handleModify 2')
+    },
     showEditDialog () {
       if (this.activeName === 'many') {
         this.dialogTitle = '动态参数'
@@ -127,6 +144,22 @@ export default {
     onCloseEditDialog () {
       console.log('close many dialog')
       this.editDialogVisiable = false
+    },
+    async onModifyConfirm (param) {
+      console.log('param:', param)
+      if (this.selectedKeys.length !== 3) return
+      // var id = this.selectedKeys[this.selectedKeys.length - 1]
+      // const { data: res } = await this.$axios.post(`categories/${id}/attributes`,
+      //   { attr_name: param.content, attr_sel: this.activeName })
+      // if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
+      // this.$message.success(res.meta.msg)
+      this.getParamData()
+      // console.log('get param data:', res)
+    },
+    onCloseModifyDialog () {
+      console.log('close many dialog')
+      this.modifyDialogVisiable = false
+      this.curRow = null
     }
   },
   computed: {
@@ -137,9 +170,13 @@ export default {
       return true
     },
     propInfo () {
-      return {
-        title: this.dialogTitle
+      var prop = { title: this.dialogTitle }
+      if (this.curRow !== null) {
+        prop.content = this.curRow.attr_name
+        // prop.title = this.curRow.attr_name
+        console.log('param propinfo:', prop)
       }
+      return prop
     }
   }
 }

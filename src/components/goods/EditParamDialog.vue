@@ -43,11 +43,13 @@ export default {
   methods: {
     onCloseDialog () {
       console.log('close dialog')
+      this.data.content = ''
       this.$emit('close')
     },
     onConfirm () {
       this.$refs.formRef.validate(valid => {
         if (!valid) return
+        this.data.id = this.prop.id
         this.$emit('confirm', this.data)
         this.isShow = false
       })
@@ -57,6 +59,10 @@ export default {
     isVisiable () {
       this.isShow = this.isVisiable
       console.log('isVisiable change')
+    },
+    prop () {
+      this.data.content = this.prop.content
+      console.log('prop change:', this.prop, this.data.content)
     }
   }
 }
