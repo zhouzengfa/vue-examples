@@ -21,7 +21,24 @@
           <el-tab-pane label="动态参数" name="many">
             <el-button type="primary" size="mini" :disabled="isDisable" @click="showEditDialog">添加参数</el-button>
             <el-table :data="manyParamData" stripe border>
-              <el-table-column  type="expand"> </el-table-column>
+              <el-table-column  type="expand">
+                <template v-slot:="scope">
+                  <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="handleClose(item)">
+                    {{item}}
+                  </el-tag>
+                  <el-input
+                    class="input-new-tag"
+                    v-if="scope.row.inputVisible"
+                    v-model="scope.row.inputValue"
+                    ref="saveTagInput"
+                    size="small"
+                    @keyup.enter.native="handleInputConfirm(scope.row)"
+                    @blur="handleInputConfirm(scope.row)"
+                  >
+                  </el-input>
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
+                </template>
+              </el-table-column>
               <el-table-column label="#" type="index"> </el-table-column>
               <el-table-column label="参数名称" prop="attr_name"> </el-table-column>
               <el-table-column label="操作" width="180px">
@@ -35,7 +52,13 @@
           <el-tab-pane label="静态属性" name="only">
             <el-button type="primary" size="mini" :disabled="isDisable" @click="showEditDialog">添加属性</el-button>
             <el-table :data="onlyParamData" stripe border>
-              <el-table-column  type="expand"> </el-table-column>
+              <el-table-column  type="expand">
+                <template v-slot:="scope">
+                  <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i">
+                    {{item}}
+                  </el-tag>
+                </template>
+              </el-table-column>
               <el-table-column label="#" type="index"> </el-table-column>
               <el-table-column label="属性名称" prop="attr_name"> </el-table-column>
               <el-table-column label="操作" width="180px">
@@ -104,6 +127,12 @@ export default {
       if (this.selectedKeys.length !== 3) return
       var id = this.selectedKeys[this.selectedKeys.length - 1]
       const { data: res } = await this.$axios.get(`categories/${id}/attributes`, { params: { sel: this.activeName } })
+      console.log('res:', res)
+      res.data.forEach((item) => {
+        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
+        item.inputVisible = false
+        item.inputValue = ''
+      })
       console.log('get param data:', res)
       if (this.activeName === 'many') {
         this.manyParamData = res.data
@@ -186,6 +215,33 @@ export default {
           message: '取消删除'
         })
       })
+    },
+    handleClose (tag) {
+      // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      console.log('handle close tag')
+    },
+    showInput (row) {
+      row.inputVisible = true
+      this.$nextTick(_ => {
+        // 获得焦点
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    async handleInputConfirm (row) {
+      const inputValue = row.inputValue
+      if (inputValue) {
+        row.attr_vals.push(inputValue)
+        const { data: res } = await this.$axios.put(`categories/${this.cateId}/attributes/${row.attr_id}`, {
+          attr_name: row.attr_name,
+          attr_sel: row.attr_sel,
+          attr_vals: row.attr_vals.join(' ')
+        })
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+      }
+      row.inputVisible = false
+      row.inputValue = ''
+      console.log('handle input confirm')
     }
   },
   computed: {
@@ -194,6 +250,11 @@ export default {
         return false
       }
       return true
+    },
+    cateId () {
+      if (this.selectedKeys.length !== 3) return
+      var id = this.selectedKeys[this.selectedKeys.length - 1]
+      return id
     },
     propInfo () {
       var prop = { title: this.dialogTitle }
@@ -215,5 +276,12 @@ export default {
   .el-table {
     margin-top: 15px;
   }
-
+  .el-tag {
+    margin-right: 10px;
+  }
+  .button-new-tag {
+  }
+  .input-new-tag {
+    width: 90px;
+  }
 </style>
