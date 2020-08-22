@@ -7,8 +7,8 @@
     <template v-slot:card>
       <el-row :gutter="20">
         <el-col :span="10">
-          <el-input placeholder="请输入内容" v-model="searchContent">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getGoodList">
+            <el-button slot="append" icon="el-icon-search" @click="getGoodList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -57,7 +57,6 @@ export default {
   data () {
     return {
       goodList: [],
-      searchContent: '',
       queryInfo: {
         query: '',
         pagenum: 1,
