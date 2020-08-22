@@ -27,7 +27,7 @@
               <el-table-column label="操作" width="180px">
                 <template v-slot:="scope">
                   <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleModify(scope.row)">编辑</el-button>
-                  <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+                  <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleDeleteParam(scope.row.attr_id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -39,8 +39,10 @@
               <el-table-column label="#" type="index"> </el-table-column>
               <el-table-column label="属性名称" prop="attr_name"> </el-table-column>
               <el-table-column label="操作" width="180px">
-                <el-button type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
-                <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+                <template v-slot:="scope">
+                  <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleModify(scope.row)">编辑</el-button>
+                  <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleDeleteParam(scope.row.attr_id)">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
           </el-tab-pane>
@@ -135,7 +137,10 @@ export default {
       if (this.selectedKeys.length !== 3) return
       var id = this.selectedKeys[this.selectedKeys.length - 1]
       const { data: res } = await this.$axios.post(`categories/${id}/attributes`,
-        { attr_name: param.content, attr_sel: this.activeName })
+        {
+          attr_name: param.content,
+          attr_sel: this.activeName
+        })
       if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
       this.$message.success(res.meta.msg)
       this.getParamData()
@@ -148,18 +153,39 @@ export default {
     async onModifyConfirm (param) {
       console.log('param:', param)
       if (this.selectedKeys.length !== 3) return
-      // var id = this.selectedKeys[this.selectedKeys.length - 1]
-      // const { data: res } = await this.$axios.post(`categories/${id}/attributes`,
-      //   { attr_name: param.content, attr_sel: this.activeName })
-      // if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
-      // this.$message.success(res.meta.msg)
+      var id = this.selectedKeys[this.selectedKeys.length - 1]
+      const { data: res } = await this.$axios.put(`categories/${id}/attributes/${this.curRow.attr_id}`,
+        {
+          attr_name: param.content,
+          attr_sel: this.activeName
+        })
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
       this.getParamData()
-      // console.log('get param data:', res)
     },
     onCloseModifyDialog () {
       console.log('close many dialog')
       this.modifyDialogVisiable = false
       this.curRow = null
+    },
+    handleDeleteParam (attrid) {
+      this.$confirm('此操作将永久删除该属性, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async (op) => {
+        if (this.selectedKeys.length !== 3) return
+        var id = this.selectedKeys[this.selectedKeys.length - 1]
+        const { data: res } = await this.$axios.delete(`categories/${id}/attributes/${attrid}`)
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        this.getParamData()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消删除'
+        })
+      })
     }
   },
   computed: {
@@ -180,7 +206,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="less" scoped>
