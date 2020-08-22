@@ -23,7 +23,7 @@
             <el-table :data="manyParamData" stripe border>
               <el-table-column  type="expand">
                 <template v-slot:="scope">
-                  <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="handleClose(item)">
+                  <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="handleClose(scope.row, i)">
                     {{item}}
                   </el-tag>
                   <el-input
@@ -54,9 +54,20 @@
             <el-table :data="onlyParamData" stripe border>
               <el-table-column  type="expand">
                 <template v-slot:="scope">
-                  <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i">
-                    {{item}}
-                  </el-tag>
+                    <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="handleClose(scope.row, i)">
+                      {{item}}
+                    </el-tag>
+                    <el-input
+                      class="input-new-tag"
+                      v-if="scope.row.inputVisible"
+                      v-model="scope.row.inputValue"
+                      ref="saveTagInput"
+                      size="small"
+                      @keyup.enter.native="handleInputConfirm(scope.row)"
+                      @blur="handleInputConfirm(scope.row)"
+                    >
+                    </el-input>
+                    <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
                 </template>
               </el-table-column>
               <el-table-column label="#" type="index"> </el-table-column>
@@ -216,8 +227,10 @@ export default {
         })
       })
     },
-    handleClose (tag) {
+    handleClose (row, i) {
       // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      row.attr_vals.splice(i, 1)
+      this.saveTagValue(row)
       console.log('handle close tag')
     },
     showInput (row) {
@@ -227,21 +240,24 @@ export default {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
-    async handleInputConfirm (row) {
+    handleInputConfirm (row) {
       const inputValue = row.inputValue
       if (inputValue) {
         row.attr_vals.push(inputValue)
-        const { data: res } = await this.$axios.put(`categories/${this.cateId}/attributes/${row.attr_id}`, {
-          attr_name: row.attr_name,
-          attr_sel: row.attr_sel,
-          attr_vals: row.attr_vals.join(' ')
-        })
-        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-        this.$message.success(res.meta.msg)
+        this.saveTagValue(row)
       }
       row.inputVisible = false
       row.inputValue = ''
       console.log('handle input confirm')
+    },
+    async saveTagValue (row) {
+      const { data: res } = await this.$axios.put(`categories/${this.cateId}/attributes/${row.attr_id}`, {
+        attr_name: row.attr_name,
+        attr_sel: row.attr_sel,
+        attr_vals: row.attr_vals.join(' ')
+      })
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
     }
   },
   computed: {
