@@ -28,7 +28,7 @@
         <el-table-column label="操作" width="180px">
           <template v-slot:="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit" >编辑</el-button>
-            <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeById(scope.row.goods_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -73,6 +73,23 @@ export default {
       this.totalpage = res.data.total
       this.goodList = res.data.goods
       console.log('goodlist:', this.goodList)
+    },
+    async removeById (id) {
+      this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async (op) => {
+        const { data: res } = await this.$axios.delete(`goods/${id}`)
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        this.getGoodList()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消删除'
+        })
+      })
     },
     handleSizeChange (pagesize) {
       console.log('page size change:', pagesize)
