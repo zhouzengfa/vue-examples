@@ -16,13 +16,11 @@
         </el-col>
       </el-row>
       <el-table :data="goodList" stripe border>
-        <el-table-column  type="expand">
-        </el-table-column>
         <el-table-column label="#" type="index"> </el-table-column>
-        <el-table-column label="商品名称" prop=""> </el-table-column>
-        <el-table-column label="商品价格(元)" prop=""> </el-table-column>
-        <el-table-column label="商品重量" prop=""> </el-table-column>
-        <el-table-column label="创建时间" prop=""> </el-table-column>
+        <el-table-column label="商品名称" prop="goods_name"> </el-table-column>
+        <el-table-column label="商品价格(元)" prop="goods_price"> </el-table-column>
+        <el-table-column label="商品重量" prop="goods_weight"> </el-table-column>
+        <el-table-column label="创建时间" prop="add_time"> </el-table-column>
         <el-table-column label="操作" width="180px">
           <template v-slot:="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit" >编辑</el-button>
@@ -45,11 +43,28 @@ export default {
   },
   data () {
     return {
-      goodList: []
+      goodList: [],
+      searchContent: '',
+      queryInfo: {
+        query: '',
+        pagenum: 1,
+        pagesize: 5
+      },
+      totalpage: 0
     }
   },
   methods: {
-
+    async getGoodList () {
+      const { data: res } = await this.$axios.get('goods', { params: this.queryInfo })
+      console.log('goodlist', res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.totalpage = res.total
+      this.goodList = res.data.goods
+      console.log('goodlist:', this.goodList)
+    }
+  },
+  created () {
+    this.getGoodList()
   }
 }
 </script>
