@@ -38,7 +38,7 @@ import {
   Alert,
   Tabs,
   TabPane,
-  Steps, Step
+  Steps, Step, Checkbox, CheckboxGroup
 } from 'element-ui'
 
 Vue.use(Form)
@@ -75,6 +75,8 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Steps)
 Vue.use(Step)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 
 Vue.config.productionTip = false
 

@@ -15,7 +15,7 @@
         <el-step title="完成"></el-step>
       </el-steps>
       <el-form ref="form" :rules="rules" :model="form" label-position="top">
-        <el-tabs tab-position="left" v-model="activeStep" :before-leave="beforleave">
+        <el-tabs tab-position="left" v-model="activeStep" :before-leave="beforleave" @tab-click="tabClicked">
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="form.goods_name"></el-input>
@@ -38,7 +38,13 @@
               </el-cascader>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
+          <el-tab-pane label="商品参数" name="1">
+            <el-form-item :label="item.attr_name" v-for="(item, i) in manyTabData" :key="i">
+              <el-checkbox-group v-model="item.attr_vals">
+                <el-checkbox :label="val" v-for="val in item.attr_vals" :key="val" border></el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-tab-pane>
           <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
           <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
           <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
@@ -79,7 +85,8 @@ export default {
         goods_number: [{ required: true, message: '请输入数量', trigger: 'blur' }],
         goods_weight: [{ required: true, message: '请输入重量', trigger: 'blur' }],
         goods_kind: [{ required: true, message: '请选择商品分类', trigger: 'blur' }]
-      }
+      },
+      manyTabData: []
     }
   },
   methods: {
@@ -105,10 +112,28 @@ export default {
         }
       }
       return true
+    },
+    async tabClicked () {
+      if (this.activeStep === '1') {
+        const { data: res } = await this.$axios.get(`categories/${this.cateId}/attributes`, { params: { sel: 'many' } })
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        console.log(res)
+        res.data.forEach(item => {
+          item.attr_vals = item.attr_vals.length !== 0 ? item.attr_vals.split(' ') : []
+        })
+        this.manyTabData = res.data
+      }
+      console.log('tab clicked')
     }
   },
   created () {
     this.getCatList()
+  },
+  computed: {
+    cateId () {
+      if (this.form.goods_kind.length !== 3) return null
+      return this.form.goods_kind[2]
+    }
   }
 }
 </script>
@@ -117,4 +142,7 @@ export default {
 .el-steps {
   margin: 15px 0px;
 }
+  .el-checkbox {
+    margin-right: 0px;
+  }
 </style>
