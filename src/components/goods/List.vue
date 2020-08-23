@@ -12,7 +12,7 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加商品</el-button>
+          <el-button type="primary" @click="goAddGood">添加商品</el-button>
         </el-col>
       </el-row>
       <el-table :data="goodList" stripe border>
@@ -66,6 +66,9 @@ export default {
     }
   },
   methods: {
+    goAddGood () {
+      this.$router.push('/add')
+    },
     async getGoodList () {
       const { data: res } = await this.$axios.get('goods', { params: this.queryInfo })
       console.log('goodlist', res)
