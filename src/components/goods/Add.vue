@@ -6,6 +6,14 @@
     </template>
     <template v-slot:card>
       <el-alert title="添加商品信息" type="info" center show-icon :closable="false"> </el-alert>
+      <el-steps :active="activeStep - 0" finish-status="success" align-center>
+        <el-step title="基本信息"></el-step>
+        <el-step title="商品参数"></el-step>
+        <el-step title="商品属性"></el-step>
+        <el-step title="商品图片"></el-step>
+        <el-step title="商品内容"></el-step>
+        <el-step title="完成"></el-step>
+      </el-steps>
     </template>
   </base-card>
 </template>
@@ -17,10 +25,17 @@ export default {
   name: 'Add',
   components: {
     BaseCard
+  },
+  data () {
+    return {
+      activeStep: '0'
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+.el-steps {
+  margin: 15px 0px;
+}
 </style>

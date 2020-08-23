@@ -5,3 +5,6 @@ html, body, #app{
     min-width: 1024px;
     /*background-color: #2b4b6b;*/
 }
+.el-step__title {
+    font-size: 12px;
+}

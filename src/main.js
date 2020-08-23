@@ -5,18 +5,40 @@ import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.css'
 import {
-  Aside, Breadcrumb, BreadcrumbItem,
-  Button, Card, Col,
-  Container, Dialog,
+  Aside,
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  Card,
+  Col,
+  Container,
+  Dialog,
   Form,
   FormItem,
   Header,
   Input,
   Main,
   Menu,
-  MenuItem, MenuItemGroup,
-  Message, Pagination, Row,
-  Submenu, Switch, Table, TableColumn, Tooltip, MessageBox, Tag, Tree, Select, Option, Cascader, Alert, Tabs, TabPane
+  MenuItem,
+  MenuItemGroup,
+  Message,
+  Pagination,
+  Row,
+  Submenu,
+  Switch,
+  Table,
+  TableColumn,
+  Tooltip,
+  MessageBox,
+  Tag,
+  Tree,
+  Select,
+  Option,
+  Cascader,
+  Alert,
+  Tabs,
+  TabPane,
+  Steps, Step
 } from 'element-ui'
 
 Vue.use(Form)
@@ -51,6 +73,8 @@ Vue.use(Cascader)
 Vue.use(Alert)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Steps)
+Vue.use(Step)
 
 Vue.config.productionTip = false
 
