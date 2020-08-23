@@ -14,6 +14,13 @@
         <el-step title="商品内容"></el-step>
         <el-step title="完成"></el-step>
       </el-steps>
+      <el-tabs tab-position="left" style="height: 200px;" v-model="activeStep">
+        <el-tab-pane label="基本信息" name="0">基本信息</el-tab-pane>
+        <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
+        <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
+        <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
+        <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
+      </el-tabs>
     </template>
   </base-card>
 </template>
