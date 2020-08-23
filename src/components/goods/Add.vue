@@ -15,7 +15,7 @@
         <el-step title="完成"></el-step>
       </el-steps>
       <el-form ref="form" :rules="rules" :model="form" label-position="top">
-        <el-tabs tab-position="left" v-model="activeStep">
+        <el-tabs tab-position="left" v-model="activeStep" @before-leave="beforleave">
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="form.goods_name"></el-input>
@@ -31,7 +31,7 @@
             </el-form-item>
             <el-form-item label="商品分类" prop="goods_kind">
               <el-cascader
-                v-model="selectedKeys"
+                v-model="form.goods_kind"
                 :options="catlist"
                 :props="props"
                 @change="handleChange">
@@ -60,7 +60,6 @@ export default {
     return {
       activeStep: '0',
       catlist: [],
-      selectedKeys: [],
       props: {
         value: 'cat_id',
         label: 'cat_name',
@@ -79,7 +78,7 @@ export default {
         goods_price: [{ required: true, message: '请输入价格', trigger: 'blur' }],
         goods_number: [{ required: true, message: '请输入数量', trigger: 'blur' }],
         goods_weight: [{ required: true, message: '请输入重量', trigger: 'blur' }],
-        goods_kind: [{ required: true }]
+        goods_kind: [{ required: true, message: '请选择商品分类', trigger: 'blur' }]
       }
     }
   },
@@ -92,8 +91,13 @@ export default {
       console.log('catlist:', this.catlist)
     },
     handleChange () {
-      // this.getCatList()
       console.log('handle change')
+      if (this.form.goods_kind.length !== 3) {
+        this.form.goods_kind = []
+      }
+    },
+    beforleave (newTab, oldTab) {
+      console.log('new:', newTab, 'old:', oldTab)
     }
   },
   created () {
