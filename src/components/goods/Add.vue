@@ -50,7 +50,20 @@
               <el-input v-model="item.attr_vals"></el-input>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
+          <el-tab-pane label="商品图片" name="3">
+            <el-upload
+              :action="uploadUrl"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :headers="header"
+              list-type="picture"
+              multiple
+              :limit="3"
+              :on-exceed="handleExceed"
+              :file-list="fileList">
+              <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+          </el-tab-pane>
           <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
         </el-tabs>
       </el-form>
@@ -91,7 +104,9 @@ export default {
         goods_kind: [{ required: true, message: '请选择商品分类', trigger: 'blur' }]
       },
       manyTabData: [],
-      onlyTabData: []
+      onlyTabData: [],
+      uploadUrl: 'https://www.liulongbin.top:8888/api/private/v1/upload',
+      fileList: []
     }
   },
   methods: {
@@ -137,6 +152,15 @@ export default {
         this.onlyTabData = res.data
       }
       console.log('tab clicked')
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    },
+    handleExceed (files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     }
   },
   created () {
@@ -146,6 +170,11 @@ export default {
     cateId () {
       if (this.form.goods_kind.length !== 3) return null
       return this.form.goods_kind[2]
+    },
+    header () {
+      return {
+        Authorization: window.sessionStorage.getItem('token')
+      }
     }
   }
 }
