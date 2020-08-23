@@ -85,7 +85,11 @@ export default {
   },
   methods: {
     async getCatList () {
-
+      const { data: res } = await this.$axios.get('categories')
+      console.log('goodlist', res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.catlist = res.data
+      console.log('catlist:', this.catlist)
     },
     handleChange () {
       // this.getCatList()
