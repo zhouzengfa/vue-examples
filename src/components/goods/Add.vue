@@ -15,7 +15,7 @@
         <el-step title="完成"></el-step>
       </el-steps>
       <el-form ref="form" :rules="rules" :model="form" label-position="top">
-        <el-tabs tab-position="left" v-model="activeStep" @before-leave="beforleave">
+        <el-tabs tab-position="left" v-model="activeStep" :before-leave="beforleave">
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="form.goods_name"></el-input>
@@ -98,6 +98,13 @@ export default {
     },
     beforleave (newTab, oldTab) {
       console.log('new:', newTab, 'old:', oldTab)
+      if (oldTab === '0') {
+        if (this.form.goods_kind.length !== 3) {
+          this.$message.error('请选择商品分类')
+          return false
+        }
+      }
+      return true
     }
   },
   created () {
