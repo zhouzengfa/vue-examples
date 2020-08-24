@@ -1,4 +1,5 @@
 <template>
+  <div>
   <base-card>
     <template v-slot:nav>
       <el-breadcrumb-item><a href="/">商品管理</a></el-breadcrumb-item>
@@ -69,7 +70,12 @@
         </el-tabs>
       </el-form>
     </template>
+
   </base-card>
+  <el-dialog title="图片预览" :visible.sync="picPreviewVisiable" width="50%" @close="onClosePreviewDialog">
+        <img :src="picPreviewUrl" class="preview-img"/>
+  </el-dialog>
+</div>
 </template>
 
 <script>
@@ -108,7 +114,9 @@ export default {
       manyTabData: [],
       onlyTabData: [],
       uploadUrl: 'https://www.liulongbin.top:8888/api/private/v1/upload',
-      fileList: []
+      fileList: [],
+      picPreviewVisiable: false,
+      picPreviewUrl: ''
     }
   },
   methods: {
@@ -168,7 +176,11 @@ export default {
       console.log('pics:', this.form.pics)
     },
     handlePreview (file) {
-      console.log(file)
+      console.log('file', file)
+      this.picPreviewUrl = file.response.data.url
+      this.picPreviewVisiable = true
+      console.log('visiable:', this.picPreviewVisiable)
+      console.log('this', this)
     },
     handleExceed (files, fileList) {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -178,6 +190,10 @@ export default {
       const path = res.data.tmp_path
       this.form.pics.push({ pic: path })
       console.log('pics:', this.form.pics)
+    },
+    onClosePreviewDialog () {
+      this.picPreviewUrl = ''
+      this.picPreviewVisiable = false
     }
   },
   created () {
@@ -203,5 +219,8 @@ export default {
 }
   .el-checkbox {
     margin-right: 0px;
+  }
+  .preview-img {
+    width: 100%;
   }
 </style>
