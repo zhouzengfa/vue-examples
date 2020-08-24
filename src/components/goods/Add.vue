@@ -53,6 +53,7 @@
           <el-tab-pane label="商品图片" name="3">
             <el-upload
               :action="uploadUrl"
+              :on-success="handleSuccess"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :headers="header"
@@ -94,7 +95,8 @@ export default {
         goods_price: '',
         goods_number: '',
         goods_weight: '',
-        goods_kind: []
+        goods_kind: [],
+        pics: []
       },
       rules: {
         goods_name: [{ required: true, message: '请输入商品名', trigger: 'blur' }],
@@ -161,6 +163,12 @@ export default {
     },
     handleExceed (files, fileList) {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    handleSuccess (res, file, fileList) {
+      console.log('res:', res, 'file:', file, 'fileList:', fileList)
+      const path = res.data.tmp_path
+      this.form.pics.push({ pic: path })
+      console.log('pics:', this.form.pics)
     }
   },
   created () {
