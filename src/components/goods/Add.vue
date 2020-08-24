@@ -157,6 +157,15 @@ export default {
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
+      const path = file.response.data.tmp_path
+      const index = this.form.pics.findIndex(x => {
+        if (x.pic === path) {
+          return true
+        }
+        return false
+      })
+      this.form.pics.splice(index, 1)
+      console.log('pics:', this.form.pics)
     },
     handlePreview (file) {
       console.log(file)
