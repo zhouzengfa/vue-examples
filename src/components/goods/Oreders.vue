@@ -1,4 +1,5 @@
 <template>
+  <div>
   <BaseCard>
     <template v-slot:nav>
       <el-breadcrumb-item><a href="/">订单管理</a></el-breadcrumb-item>
@@ -30,7 +31,7 @@
         </el-table-column>
         <el-table-column label="操作" width="120px">
           <template v-slot:="scope">
-            <el-button type="primary" size="mini" icon="el-icon-edit" ></el-button>
+            <el-button type="primary" size="mini" icon="el-icon-edit" @click="showModifyAdressDialog"></el-button>
             <el-button type="success" size="mini" icon="el-icon-location" @click="removeById(scope.row.goods_id)"></el-button>
           </template>
         </el-table-column>
@@ -46,10 +47,30 @@
       </el-pagination>
     </template>
   </BaseCard>
+    <el-dialog title="修改地址" :visible.sync="addressDialogVisiable" width="50%" @close="closeAddressDialog">
+      <el-form :model="addressForm" :rules="addressFormRules" ref="addressFormRef" label-width="100px">
+        <el-form-item label="省市区/县" prop="address1">
+          <el-cascader
+            v-model="addressForm.address1"
+            :options="citydata"
+            :props="{ expandTrigger: 'hover' }"
+            @change="handleChange"></el-cascader>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="address2">
+          <el-input v-model="addressForm.address2"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="addressDialogVisiable = false">取 消</el-button>
+    <el-button type="primary" @click="addressDialogVisiable = false">确 定</el-button>
+  </span>
+    </el-dialog>  </div>
 </template>
 
 <script>
 import BaseCard from '../common/BaseCard'
+import citydata from './citydata.js'
+
 export default {
   name: 'Oreders',
   components: {
@@ -63,7 +84,17 @@ export default {
         pagesize: 5
       },
       totalpage: 0,
-      orderList: []
+      orderList: [],
+      citydata,
+      addressDialogVisiable: false,
+      addressForm: {
+        address1: [],
+        address2: ''
+      },
+      addressFormRules: {
+        address1: [{ required: true, message: '请选择省市区', trigger: 'blur' }],
+        address2: [{ required: true, message: '请填写地址', trigger: 'blur' }]
+      }
     }
   },
   methods: {
@@ -83,6 +114,16 @@ export default {
       console.log('order list:', res)
       this.orderList = res.data.goods
       this.totalpage = res.data.total
+    },
+    showModifyAdressDialog () {
+      this.addressDialogVisiable = true
+      console.log('show address dialog')
+    },
+    handleChange (value) {
+      console.log(value)
+    },
+    closeAddressDialog () {
+      this.$refs.addressFormRef.resetFields()
     }
   },
   created () {
@@ -96,4 +137,7 @@ export default {
 .el-table {
   margin: 15px 0px;
 }
+  .el-cascader {
+    width: 100%;
+  }
 </style>
