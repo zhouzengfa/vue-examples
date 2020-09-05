@@ -30,9 +30,9 @@
             <el-form-item label="商品重量" prop="goods_weight">
               <el-input type="number" v-model="form.goods_weight"></el-input>
             </el-form-item>
-            <el-form-item label="商品分类" prop="goods_kind">
+            <el-form-item label="商品分类" prop="goods_cat">
               <el-cascader
-                v-model="form.goods_kind"
+                v-model="form.goods_cat"
                 :options="catlist"
                 :props="props"
                 @change="handleChange">
@@ -106,16 +106,17 @@ export default {
         goods_price: '',
         goods_number: '',
         goods_weight: '',
-        goods_kind: [],
+        goods_cat: [],
         pics: [],
-        goods_introduce: ''
+        goods_introduce: '',
+        attrs: []
       },
       rules: {
         goods_name: [{ required: true, message: '请输入商品名', trigger: 'blur' }],
         goods_price: [{ required: true, message: '请输入价格', trigger: 'blur' }],
         goods_number: [{ required: true, message: '请输入数量', trigger: 'blur' }],
         goods_weight: [{ required: true, message: '请输入重量', trigger: 'blur' }],
-        goods_kind: [{ required: true, message: '请选择商品分类', trigger: 'blur' }]
+        goods_cat: [{ required: true, message: '请选择商品分类', trigger: 'blur' }]
       },
       manyTabData: [],
       onlyTabData: [],
@@ -135,14 +136,14 @@ export default {
     },
     handleChange () {
       console.log('handle change')
-      if (this.form.goods_kind.length !== 3) {
-        this.form.goods_kind = []
+      if (this.form.goods_cat.length !== 3) {
+        this.form.goods_cat = []
       }
     },
     beforleave (newTab, oldTab) {
       console.log('new:', newTab, 'old:', oldTab)
       if (oldTab === '0') {
-        if (this.form.goods_kind.length !== 3) {
+        if (this.form.goods_cat.length !== 3) {
           this.$message.error('请选择商品分类')
           return false
         }
@@ -201,13 +202,34 @@ export default {
       this.picPreviewUrl = ''
       this.picPreviewVisiable = false
     },
-    add () {
-      this.$refs.form.validate(valid => {
+    async add () {
+      this.$refs.form.validate(async valid => {
         if (!valid) return this.$message.error('请输入参数')
         var form = _.cloneDeep(this.form)
-        form.goods_kind = form.goods_kind.join(',')
-
+        form.goods_cat = form.goods_cat.join(',')
+        this.manyTabData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_vals: item.attr_vals.join(' ')
+          }
+          this.form.attrs.push(newInfo)
+        })
+        this.onlyTabData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_vals: item.attr_vals
+          }
+          this.form.attrs.push(newInfo)
+        })
+        form.attrs = this.form.attrs
         console.log(form)
+
+        const { data: res } = await this.$axios.post('goods', form)
+        console.log(res)
+        if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+
+        this.$router.push('/goods')
       })
     }
   },
@@ -216,8 +238,8 @@ export default {
   },
   computed: {
     cateId () {
-      if (this.form.goods_kind.length !== 3) return null
-      return this.form.goods_kind[2]
+      if (this.form.goods_cat.length !== 3) return null
+      return this.form.goods_cat[2]
     },
     header () {
       return {
