@@ -48,7 +48,7 @@
           </el-tab-pane>
           <el-tab-pane label="商品属性" name="2">
             <el-form-item :label="item.attr_name" v-for="item in onlyTabData" :key="item.attr_id">
-              <el-input v-model="item.attr_vals"></el-input>
+              <el-input v-model="item.attr_vals" @click="add"></el-input>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品图片" name="3">
@@ -69,7 +69,7 @@
           <el-tab-pane label="商品内容" name="4">
             <quill-editor v-model="form.goods_introduce">
             </quill-editor>
-            <el-button type="primary">添加商品</el-button>
+            <el-button type="primary" @click="add">添加商品</el-button>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -84,6 +84,7 @@
 
 <script>
 import BaseCard from '../common/BaseCard'
+import _ from 'lodash'
 
 export default {
   name: 'Add',
@@ -199,6 +200,15 @@ export default {
     onClosePreviewDialog () {
       this.picPreviewUrl = ''
       this.picPreviewVisiable = false
+    },
+    add () {
+      this.$refs.form.validate(valid => {
+        if (!valid) return this.$message.error('请输入参数')
+        var form = _.cloneDeep(this.form)
+        form.goods_kind = form.goods_kind.join(',')
+
+        console.log(form)
+      })
     }
   },
   created () {
