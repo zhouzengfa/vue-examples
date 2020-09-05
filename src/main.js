@@ -40,6 +40,11 @@ import {
   TabPane,
   Steps, Step, Checkbox, CheckboxGroup, Upload
 } from 'element-ui'
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 Vue.use(Form)
 Vue.use(FormItem)
@@ -78,6 +83,7 @@ Vue.use(Step)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Upload)
+Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
 
