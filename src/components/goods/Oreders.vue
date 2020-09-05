@@ -54,13 +54,19 @@ export default {
         pagenum: 1,
         pagesize: 5
       },
-      totalpage: 0
+      totalpage: 0,
+      orderList: []
     }
   },
   methods: {
 
   },
-  created () {
+  async created () {
+    const { data: res } = await this.$axios.get('orders', { params: this.queryInfo })
+    if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+    console.log('order list:', res)
+    this.orderList = res.data.goods
+    this.totalpage = res.data.total
   }
 
 }
