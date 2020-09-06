@@ -32,7 +32,7 @@
         <el-table-column label="操作" width="120px">
           <template v-slot:="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit" @click="showModifyAdressDialog"></el-button>
-            <el-button type="success" size="mini" icon="el-icon-location" @click="removeById(scope.row.goods_id)"></el-button>
+            <el-button type="success" size="mini" icon="el-icon-location" @click="showProgressDialog()"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,24 +47,28 @@
       </el-pagination>
     </template>
   </BaseCard>
-    <el-dialog title="修改地址" :visible.sync="addressDialogVisiable" width="50%" @close="closeAddressDialog">
-      <el-form :model="addressForm" :rules="addressFormRules" ref="addressFormRef" label-width="100px">
-        <el-form-item label="省市区/县" prop="address1">
-          <el-cascader
-            v-model="addressForm.address1"
-            :options="citydata"
-            :props="{ expandTrigger: 'hover' }"
-            @change="handleChange"></el-cascader>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="address2">
-          <el-input v-model="addressForm.address2"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-    <el-button @click="addressDialogVisiable = false">取 消</el-button>
-    <el-button type="primary" @click="addressDialogVisiable = false">确 定</el-button>
-  </span>
-    </el-dialog>  </div>
+  <el-dialog title="修改地址" :visible.sync="addressDialogVisiable" width="50%" @close="closeAddressDialog">
+    <el-form :model="addressForm" :rules="addressFormRules" ref="addressFormRef" label-width="100px">
+      <el-form-item label="省市区/县" prop="address1">
+        <el-cascader
+          v-model="addressForm.address1"
+          :options="citydata"
+          :props="{ expandTrigger: 'hover' }"
+          @change="handleChange"></el-cascader>
+      </el-form-item>
+      <el-form-item label="详细地址" prop="address2">
+        <el-input v-model="addressForm.address2"></el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="addressDialogVisiable = false">取 消</el-button>
+      <el-button type="primary" @click="addressDialogVisiable = false">确 定</el-button>
+    </span>
+  </el-dialog>
+  <el-dialog title="进度" :visible.sync="progressDialogVisiable" width="50%" >
+
+  </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -94,7 +98,9 @@ export default {
       addressFormRules: {
         address1: [{ required: true, message: '请选择省市区', trigger: 'blur' }],
         address2: [{ required: true, message: '请填写地址', trigger: 'blur' }]
-      }
+      },
+      progressDialogVisiable: false,
+      progressInfo: []
     }
   },
   methods: {
@@ -124,6 +130,13 @@ export default {
     },
     closeAddressDialog () {
       this.$refs.addressFormRef.resetFields()
+    },
+    async showProgressDialog () {
+      const { data: res } = await this.$axios.get('kuaidi/804909574412544580')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      console.log(res)
+      this.progressInfo = res.data
+      this.progressDialogVisiable = true
     }
   },
   created () {
