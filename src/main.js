@@ -38,7 +38,7 @@ import {
   Alert,
   Tabs,
   TabPane,
-  Steps, Step, Checkbox, CheckboxGroup, Upload
+  Steps, Step, Checkbox, CheckboxGroup, Upload, Timeline, TimelineItem
 } from 'element-ui'
 import VueQuillEditor from 'vue-quill-editor'
 
@@ -84,6 +84,8 @@ Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Upload)
 Vue.use(VueQuillEditor)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 
 Vue.config.productionTip = false
 

@@ -65,8 +65,15 @@
       <el-button type="primary" @click="addressDialogVisiable = false">确 定</el-button>
     </span>
   </el-dialog>
-  <el-dialog title="进度" :visible.sync="progressDialogVisiable" width="50%" >
-
+  <el-dialog title="物流进度" :visible.sync="progressDialogVisiable" width="50%" >
+    <el-timeline>
+      <el-timeline-item
+        v-for="(item, index) in progressInfo"
+        :key="index"
+        :timestamp="item.time">
+        {{item.context}}
+      </el-timeline-item>
+    </el-timeline>
   </el-dialog>
   </div>
 </template>
