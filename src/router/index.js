@@ -1,9 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../components/Login'
-import Home from '../components/Home'
-import Welcome from '../components/Welcome'
-import Users from '../components/user/Users'
 import Rights from '../components/power/Rights'
 import Roles from '../components/power/Roles'
 import Cat from '../components/goods/Cat'
@@ -12,6 +8,15 @@ import List from '../components/goods/List'
 import Add from '../components/goods/Add'
 import Orders from '../components/goods/Oreders'
 import Report from '../components/goods/Report'
+
+// import Login from '../components/Login'
+// import Home from '../components/Home'
+// import Welcome from '../components/Welcome'
+
+const Login = () => import(/* webpackChunkName: "login-home-welcome" */ '../components/Login.vue')
+const Home = () => import(/* webpackChunkName: "login-home-welcome" */ '../components/Home')
+const Welcome = () => import(/* webpackChunkName: "login-home-welcome" */ '../components/Welcome')
+const Users = () => import('../components/user/Users.vue')
 
 Vue.use(VueRouter)
 
