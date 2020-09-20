@@ -9,19 +9,20 @@ module.exports = {
         'vue-router': 'VueRouter',
         axios: 'axios',
         'vue-quill-editor': 'VueQuillEditor',
-        echarts: 'echarts'
+        echarts: 'echarts',
+        'element-ui': 'ELEMENT'
       })
     })
 
     config.when(process.env.NODE_ENV === 'development', config => {
       config.entry('app').clear().add('./src/main-dev.js')
-      config.set('externals', {
-        vue: 'Vue',
-        'vue-router': 'VueRouter',
-        axios: 'axios',
-        'vue-quill-editor': 'VueQuillEditor',
-        echarts: 'echarts'
-      })
+      // config.set('externals', {
+      //   vue: 'Vue',
+      //   'vue-router': 'VueRouter',
+      //   axios: 'axios',
+      //   'vue-quill-editor': 'VueQuillEditor',
+      //   echarts: 'echarts'
+      // })
     })
   }
 }
